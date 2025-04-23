@@ -46,28 +46,31 @@ public class SimpleShoot : MonoBehaviour
     {
         if (muzzleFlashPrefab)
         {
-            // Create the muzzle flash
+            // Create the muzzle flash at the regular barrel location
             GameObject tempFlash = Instantiate(muzzleFlashPrefab, barrelLocation.position, barrelLocation.rotation);
-            Destroy(tempFlash, destroyTimer); // Destroy the muzzle flash after a delay
+            Destroy(tempFlash, destroyTimer);
         }
 
-        // Cancel if there's no bullet prefab
         if (!bulletPrefab)
             return;
 
-        // Instantiate the bullet
-        GameObject bullet = Instantiate(bulletPrefab, barrelLocation.position, barrelLocation.rotation);
+        // Calculate offset position: 0.285m to the left relative to the barrel
+        Vector3 leftOffset = barrelLocation.position - barrelLocation.right * 0.285f;
+
+        // Instantiate the bullet at the offset position
+        GameObject bullet = Instantiate(bulletPrefab, leftOffset, barrelLocation.rotation);
 
         // Add the "Bullet" tag
-        bullet.tag = "Bullet"; // Make sure "Bullet" is added in Unity's Tag Manager
+        bullet.tag = "Bullet";
 
-        // Apply force to shoot the bullet
+        // Apply force
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.AddForce(barrelLocation.forward * shotPower);
         }
     }
+
 
 
     //This function creates a casing at the ejection slot
